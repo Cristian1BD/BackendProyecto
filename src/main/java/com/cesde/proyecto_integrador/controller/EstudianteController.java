@@ -1,6 +1,7 @@
 package com.cesde.proyecto_integrador.controller;
 
 import com.cesde.proyecto_integrador.dto.EstudianteDTO;
+import com.cesde.proyecto_integrador.model.Estudiante;
 import com.cesde.proyecto_integrador.service.EstudianteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,15 @@ public class EstudianteController {
     @GetMapping
     public ResponseEntity<String> obtenerEstudiantes() {
         return ResponseEntity.ok("GET: Lista de estudiantes (dummy)");
+    }
+
+    @GetMapping("/{numeroDocumento}")
+    public ResponseEntity<Estudiante> obtenerEstudiantePorDocumento(@PathVariable String numeroDocumento) {
+        Estudiante estudiante = estudianteService.buscarPorNumeroDocumento(numeroDocumento);
+        if (estudiante == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(estudiante);
     }
 
     // Actualizar un estudiante (PUT)

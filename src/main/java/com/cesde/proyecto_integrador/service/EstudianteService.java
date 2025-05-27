@@ -32,4 +32,8 @@ public class EstudianteService {
 
         estudianteRepository.save(estudiante);
     }
+
+    public Estudiante buscarPorNumeroDocumento(String numeroDocumento) {
+        return estudianteRepository.findByNumeroDocumento(numeroDocumento).orElse(null);
+    }
 }
