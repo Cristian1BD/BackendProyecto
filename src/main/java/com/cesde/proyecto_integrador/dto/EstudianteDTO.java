@@ -1,21 +1,14 @@
-package com.cesde.proyecto_integrador.model;
+package com.cesde.proyecto_integrador.dto;
 
-import jakarta.persistence.*;
 import lombok.Data;
-import java.time.LocalDate;
 
-@Entity
 @Data
-public class Estudiante {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class EstudianteDTO {
     private String nombre;
     private String apellido;
     private String tipoDocumento;
     private String numeroDocumento;
-    private LocalDate fechaNacimiento;
+    private String fechaNacimiento; // ISO-8601
     private String correo;
     private String telefono;
     private String grupo;
@@ -25,3 +18,4 @@ public class Estudiante {
     private String grupoSanguineo;
     private String institucion;
 }
+
