@@ -23,6 +23,7 @@ public class EstudianteController {
         estudianteService.guardarEstudiante(dto);
         Map<String, String> response = new HashMap<>();
         response.put("mensaje", "Estudiante registrado correctamente");
+        response.put("numeroDocumento", dto.getNumeroDocumento());
         return ResponseEntity.ok(response);
     }
 }
