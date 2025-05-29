@@ -22,8 +22,19 @@ public class EstudianteController {
     public ResponseEntity<Map<String, String>> registrarEstudiante(@ModelAttribute EstudianteDTO dto) {
         Map<String, String> response = new HashMap<>();
         try {
-            System.out.println(">>> Iniciando registro de estudiante: " + dto.getNumeroDocumento());
+            System.out.println("========== [LOG CONTROLLER] ==========");
+            System.out.println("Iniciando registro de estudiante...");
+            System.out.println("Nombre: " + dto.getNombre());
+            System.out.println("Apellido: " + dto.getApellido());
+            System.out.println("Tipo Documento: " + dto.getTipoDocumento());
+            System.out.println("Número Documento: " + dto.getNumeroDocumento());
+            System.out.println("Correo: " + dto.getCorreo());
+            System.out.println("Teléfono: " + dto.getTelefono());
+            System.out.println("Documento Identidad: " + (dto.getDocumentoIdentidad() != null ? dto.getDocumentoIdentidad().getOriginalFilename() : "null"));
+            System.out.println("Permiso Menor: " + (dto.getPermisoMenor() != null ? dto.getPermisoMenor().getOriginalFilename() : "null"));
+
             estudianteService.guardarEstudiante(dto);
+
             response.put("mensaje", "Estudiante registrado correctamente");
             response.put("numeroDocumento", dto.getNumeroDocumento());
             return ResponseEntity.ok(response);
@@ -34,3 +45,4 @@ public class EstudianteController {
         }
     }
 }
+// End of EstudianteController.java

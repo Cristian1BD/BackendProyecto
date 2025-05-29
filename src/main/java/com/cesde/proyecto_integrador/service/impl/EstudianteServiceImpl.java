@@ -16,11 +16,13 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Autowired
     private EstudianteRepository repository;
 
-    // Directorio temporal permitido en Render
     private final String uploadDir = "/tmp/uploads/";
 
     @Override
     public void guardarEstudiante(EstudianteDTO dto) {
+        System.out.println("========== [LOG SERVICE] ==========");
+        System.out.println("Iniciando guardado de estudiante en base de datos...");
+
         Estudiante estudiante = new Estudiante();
         estudiante.setNombre(dto.getNombre());
         estudiante.setApellido(dto.getApellido());
@@ -47,17 +49,20 @@ public class EstudianteServiceImpl implements EstudianteService {
         }
 
         repository.save(estudiante);
-        System.out.println(">>> Estudiante guardado exitosamente.");
+        System.out.println(">>> Estudiante guardado exitosamente en base de datos.");
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty())
+        if (file == null || file.isEmpty()) {
+            System.out.println(">>> Archivo no recibido o vacío.");
             return null;
+        }
 
         String filePath = uploadDir + System.currentTimeMillis() + "_" + file.getOriginalFilename();
         Path path = Paths.get(filePath);
         Files.createDirectories(path.getParent());
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        System.out.println(">>> Archivo guardado en: " + filePath);
         return filePath;
     }
 }
