@@ -9,3 +9,5 @@ target/
 *.iml
 *.iws
 *.ipr
+# Ignorar todos los archivos PDF en cualquier parte del proyecto
+*.pdf

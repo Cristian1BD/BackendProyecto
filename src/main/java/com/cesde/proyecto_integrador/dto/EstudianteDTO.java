@@ -1,6 +1,7 @@
 package com.cesde.proyecto_integrador.dto;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class EstudianteDTO {
@@ -8,7 +9,7 @@ public class EstudianteDTO {
     private String apellido;
     private String tipoDocumento;
     private String numeroDocumento;
-    private String fechaNacimiento; // ISO-8601
+    private String fechaNacimiento;
     private String correo;
     private String telefono;
     private String grupo;
@@ -17,5 +18,7 @@ public class EstudianteDTO {
     private String eps;
     private String grupoSanguineo;
     private String institucion;
-}
 
+    private MultipartFile documentoIdentidad;
+    private MultipartFile permisoMenor;
+}

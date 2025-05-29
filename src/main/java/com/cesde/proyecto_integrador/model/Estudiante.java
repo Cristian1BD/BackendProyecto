@@ -1,11 +1,11 @@
 package com.cesde.proyecto_integrador.model;
-
 import jakarta.persistence.*;
-import lombok.Data;
-import java.time.LocalDate;
+import lombok.*;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Estudiante {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +15,7 @@ public class Estudiante {
     private String apellido;
     private String tipoDocumento;
     private String numeroDocumento;
-    private LocalDate fechaNacimiento;
+    private String fechaNacimiento;
     private String correo;
     private String telefono;
     private String grupo;
@@ -24,4 +24,7 @@ public class Estudiante {
     private String eps;
     private String grupoSanguineo;
     private String institucion;
+
+    private String documentoIdentidadPath;
+    private String permisoMenorPath;
 }
