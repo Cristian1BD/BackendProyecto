@@ -19,6 +19,7 @@ public class EstudianteDTO {
     private String grupoSanguineo;
     private String institucion;
 
+    // Archivos adjuntos
     private MultipartFile documentoIdentidad;
     private MultipartFile permisoMenor;
 }

@@ -20,24 +20,17 @@ public class EstudianteController {
 
     @PostMapping
     public ResponseEntity<Map<String, String>> registrarEstudiante(@ModelAttribute EstudianteDTO dto) {
-        System.out.println(">>> Entrando a registrarEstudiante()");
-        System.out.println("DTO recibido: " + dto);
-
+        Map<String, String> response = new HashMap<>();
         try {
+            System.out.println(">>> Iniciando registro de estudiante: " + dto.getNumeroDocumento());
             estudianteService.guardarEstudiante(dto);
-            System.out.println(">>> Estudiante guardado");
-
-            Map<String, String> response = new HashMap<>();
             response.put("mensaje", "Estudiante registrado correctamente");
             response.put("numeroDocumento", dto.getNumeroDocumento());
-            System.out.println(">>> Respuesta generada");
             return ResponseEntity.ok(response);
-
         } catch (Exception e) {
-            e.printStackTrace();
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Error al registrar estudiante: " + e.getMessage());
-            return ResponseEntity.status(500).body(error);
+            System.out.println(">>> Error en el registro: " + e.getMessage());
+            response.put("mensaje", "Error al registrar estudiante: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
         }
     }
 }

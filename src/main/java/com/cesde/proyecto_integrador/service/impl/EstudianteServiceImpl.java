@@ -16,7 +16,8 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Autowired
     private EstudianteRepository repository;
 
-    private final String uploadDir = "uploads/";
+    // Directorio temporal permitido en Render
+    private final String uploadDir = "/tmp/uploads/";
 
     @Override
     public void guardarEstudiante(EstudianteDTO dto) {
@@ -36,17 +37,22 @@ public class EstudianteServiceImpl implements EstudianteService {
         estudiante.setInstitucion(dto.getInstitucion());
 
         try {
+            System.out.println(">>> Guardando archivos...");
             estudiante.setDocumentoIdentidadPath(saveFile(dto.getDocumentoIdentidad()));
             estudiante.setPermisoMenorPath(saveFile(dto.getPermisoMenor()));
+            System.out.println(">>> Archivos guardados correctamente.");
         } catch (IOException e) {
+            System.out.println(">>> Error al guardar archivos: " + e.getMessage());
             throw new RuntimeException("Error al guardar archivos", e);
         }
 
         repository.save(estudiante);
+        System.out.println(">>> Estudiante guardado exitosamente.");
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) return null;
+        if (file == null || file.isEmpty())
+            return null;
 
         String filePath = uploadDir + System.currentTimeMillis() + "_" + file.getOriginalFilename();
         Path path = Paths.get(filePath);
