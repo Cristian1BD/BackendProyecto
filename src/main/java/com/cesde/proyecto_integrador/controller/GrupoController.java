@@ -1,60 +1,58 @@
 package com.cesde.proyecto_integrador.controller;
 
-import com.cesde.proyecto_integrador.model.Grupo;
-import com.cesde.proyecto_integrador.repository.GrupoRepository;
+import com.cesde.proyecto_integrador.dto.GrupoDTO;
+import com.cesde.proyecto_integrador.service.GrupoService;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/api/grupos")
-@CrossOrigin(origins = "http://localhost:4200") // Permitir peticiones desde Angular
+@CrossOrigin(origins = "*") // Cambia esto por el dominio de tu frontend para más seguridad
 public class GrupoController {
 
-    private final GrupoRepository grupoRepository;
+    private final GrupoService grupoService;
 
-    public GrupoController(GrupoRepository grupoRepository) {
-        this.grupoRepository = grupoRepository;
+    // Inyección vía constructor (mejor práctica)
+    public GrupoController(GrupoService grupoService) {
+        this.grupoService = grupoService;
     }
 
-    @GetMapping
-    public List<Grupo> getAllGrupos() {
-        return grupoRepository.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Grupo> getGrupoById(@PathVariable Long id_grupo) {
-        Optional<Grupo> grupo = grupoRepository.findById(id_grupo);
-        return grupo.map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
+    /**
+     * Crea un nuevo grupo.
+     */
     @PostMapping
-    public Grupo createGrupo(@RequestBody Grupo grupo) {
-        return grupoRepository.save(grupo);
+    public ResponseEntity<GrupoDTO> crearGrupo(@RequestBody GrupoDTO grupoDTO) {
+        GrupoDTO nuevoGrupo = grupoService.crearGrupo(grupoDTO);
+        return ResponseEntity.ok(nuevoGrupo);
     }
 
+    /**
+     * Obtiene todos los grupos.
+     */
+    @GetMapping
+    public ResponseEntity<List<GrupoDTO>> obtenerGrupos() {
+        List<GrupoDTO> grupos = grupoService.obtenerTodosLosGrupos();
+        return ResponseEntity.ok(grupos);
+    }
+
+    /**
+     * Actualiza un grupo existente.
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Grupo> updateGrupo(@PathVariable Long id_grupo, @RequestBody Grupo grupoDetails) {
-        return grupoRepository.findById(id_grupo)
-                .map(grupo -> {
-                    grupo.setNombre(grupoDetails.getNombre());
-                    grupo.setDescripcion(grupoDetails.getDescripcion());
-                    grupo.setNumeroEstudiantes(grupoDetails.getNumeroEstudiantes());
-                    return ResponseEntity.ok(grupoRepository.save(grupo));
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<GrupoDTO> actualizarGrupo(@PathVariable Long id, @RequestBody GrupoDTO grupoDTO) {
+        GrupoDTO grupoActualizado = grupoService.actualizarGrupo(id, grupoDTO);
+        return ResponseEntity.ok(grupoActualizado);
     }
 
+    /**
+     * Elimina un grupo por ID.
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteGrupo(@PathVariable Long id_grupo) {
-        return grupoRepository.findById(id_grupo)
-                .map(grupo -> {
-                    grupoRepository.delete(grupo);
-                    return ResponseEntity.noContent().build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Void> eliminarGrupo(@PathVariable Long id) {
+        grupoService.eliminarGrupo(id);
+        return ResponseEntity.noContent().build();
     }
 }

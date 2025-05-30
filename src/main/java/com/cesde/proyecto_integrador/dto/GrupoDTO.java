@@ -1,18 +1,12 @@
-package com.cesde.proyecto_integrador.model;
+package com.cesde.proyecto_integrador.dto;
 
-import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Grupo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class GrupoDTO {
     private String nombre;
     private int cupo;
     private String hora;
