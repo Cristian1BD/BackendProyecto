@@ -1,7 +1,6 @@
 package com.cesde.proyecto_integrador.service;
 
 import com.cesde.proyecto_integrador.dto.GrupoDTO;
-
 import java.util.List;
 
 public interface GrupoService {

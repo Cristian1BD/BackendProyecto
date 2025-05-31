@@ -4,11 +4,9 @@ import com.cesde.proyecto_integrador.dto.GrupoDTO;
 import com.cesde.proyecto_integrador.model.Grupo;
 import com.cesde.proyecto_integrador.repository.GrupoRepository;
 import com.cesde.proyecto_integrador.service.GrupoService;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,61 +20,55 @@ public class GrupoServiceImpl implements GrupoService {
 
     @Override
     public GrupoDTO crearGrupo(GrupoDTO dto) {
-        Grupo grupo = Grupo.builder()
-                .nombre(dto.getNombre())
-                .cupo(dto.getCupo())
-                .hora(dto.getHora())
-                .lugar(dto.getLugar())
-                .salida(dto.getSalida())
-                .build();
-
-        Grupo guardado = grupoRepository.save(grupo);
-
-        return mapToDTO(guardado);
+        Grupo grupo = mapToEntity(dto);
+        grupo = grupoRepository.save(grupo);
+        return mapToDTO(grupo);
     }
 
     @Override
     public List<GrupoDTO> obtenerTodosLosGrupos() {
-        return grupoRepository.findAll()
-                .stream()
+        return grupoRepository.findAll().stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
     public GrupoDTO actualizarGrupo(Long id, GrupoDTO dto) {
-        Optional<Grupo> optionalGrupo = grupoRepository.findById(id);
-        if (optionalGrupo.isEmpty()) {
-            throw new RuntimeException("Grupo no encontrado con ID: " + id);
-        }
-
-        Grupo grupo = optionalGrupo.get();
+        Grupo grupo = grupoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Grupo no encontrado con ID: " + id));
         grupo.setNombre(dto.getNombre());
         grupo.setCupo(dto.getCupo());
         grupo.setHora(dto.getHora());
         grupo.setLugar(dto.getLugar());
         grupo.setSalida(dto.getSalida());
-
-        Grupo actualizado = grupoRepository.save(grupo);
-        return mapToDTO(actualizado);
+        return mapToDTO(grupoRepository.save(grupo));
     }
 
     @Override
     public void eliminarGrupo(Long id) {
-        if (!grupoRepository.existsById(id)) {
-            throw new RuntimeException("Grupo no encontrado con ID: " + id);
-        }
         grupoRepository.deleteById(id);
     }
 
-    // Método utilitario para mapear de Entidad a DTO
+    // Utilidades de mapeo
     private GrupoDTO mapToDTO(Grupo grupo) {
-        return GrupoDTO.builder()
-                .nombre(grupo.getNombre())
-                .cupo(grupo.getCupo())
-                .hora(grupo.getHora())
-                .lugar(grupo.getLugar())
-                .salida(grupo.getSalida())
-                .build();
+        GrupoDTO dto = new GrupoDTO();
+        dto.setId(grupo.getId());
+        dto.setNombre(grupo.getNombre());
+        dto.setCupo(grupo.getCupo());
+        dto.setHora(grupo.getHora());
+        dto.setLugar(grupo.getLugar());
+        dto.setSalida(grupo.getSalida());
+        return dto;
+    }
+
+    private Grupo mapToEntity(GrupoDTO dto) {
+        Grupo grupo = new Grupo();
+        grupo.setId(dto.getId());
+        grupo.setNombre(dto.getNombre());
+        grupo.setCupo(dto.getCupo());
+        grupo.setHora(dto.getHora());
+        grupo.setLugar(dto.getLugar());
+        grupo.setSalida(dto.getSalida());
+        return grupo;
     }
 }

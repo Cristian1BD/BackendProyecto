@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class GrupoDTO {
+    private Long id;
     private String nombre;
     private int cupo;
     private String hora;
