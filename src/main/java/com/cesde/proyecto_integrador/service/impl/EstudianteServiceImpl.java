@@ -1,9 +1,11 @@
 package com.cesde.proyecto_integrador.service.impl;
 
 import com.cesde.proyecto_integrador.dto.EstudianteDTO;
-import com.cesde.proyecto_integrador.service.EstudianteService;
 import com.cesde.proyecto_integrador.model.Estudiante;
+import com.cesde.proyecto_integrador.model.Grupo;
 import com.cesde.proyecto_integrador.repository.EstudianteRepository;
+import com.cesde.proyecto_integrador.repository.GrupoRepository;
+import com.cesde.proyecto_integrador.service.EstudianteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class EstudianteServiceImpl implements EstudianteService {
     @Autowired
     private EstudianteRepository repository;
 
+    @Autowired
+    private GrupoRepository grupoRepository;
+
     private final String uploadDir = "/tmp/uploads/";
 
     @Override
@@ -35,12 +40,17 @@ public class EstudianteServiceImpl implements EstudianteService {
         estudiante.setFechaNacimiento(dto.getFechaNacimiento());
         estudiante.setCorreo(dto.getCorreo());
         estudiante.setTelefono(dto.getTelefono());
-        estudiante.setGrupo(dto.getGrupo());
         estudiante.setGenero(dto.getGenero());
         estudiante.setDireccion(dto.getDireccion());
         estudiante.setEps(dto.getEps());
         estudiante.setGrupoSanguineo(dto.getGrupoSanguineo());
         estudiante.setInstitucion(dto.getInstitucion());
+
+        if (dto.getGrupoId() != null) {
+            Grupo grupo = grupoRepository.findById(dto.getGrupoId())
+                    .orElseThrow(() -> new RuntimeException("Grupo no encontrado"));
+            estudiante.setGrupo(grupo);
+        }
 
         try {
             System.out.println(">>> Guardando archivos...");
@@ -83,8 +93,28 @@ public class EstudianteServiceImpl implements EstudianteService {
         dto.setId(estudiante.getId());
         dto.setNombre(estudiante.getNombre());
         dto.setNumeroDocumento(estudiante.getNumeroDocumento());
-        dto.setGrupo(estudiante.getGrupo());
-        // Puedes mapear otros campos si deseas
         return dto;
+    }
+
+    @Override
+    public void asignarGrupo(Long estudianteId, Long grupoId) {
+        Estudiante estudiante = repository.findById(estudianteId)
+                .orElseThrow(() -> new RuntimeException("Estudiante no encontrado"));
+
+        Grupo grupo = grupoRepository.findById(grupoId)
+                .orElseThrow(() -> new RuntimeException("Grupo no encontrado"));
+
+        estudiante.setGrupo(grupo);
+        repository.save(estudiante);
+    }
+
+    // ✅ Método para eliminar estudiante
+    @Override
+    public void eliminarEstudiante(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Estudiante no encontrado");
+        }
+        repository.deleteById(id);
+        System.out.println(">>> Estudiante con ID " + id + " eliminado correctamente.");
     }
 }

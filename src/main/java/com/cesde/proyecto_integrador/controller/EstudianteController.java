@@ -54,5 +54,24 @@ public class EstudianteController {
             return ResponseEntity.status(500).body(response);
         }
     }
+
+    @PutMapping("/{id}/grupo/{grupoId}")
+    public ResponseEntity<?> asignarGrupo(@PathVariable Long id, @PathVariable Long grupoId) {
+        try {
+            estudianteService.asignarGrupo(id, grupoId);
+            return ResponseEntity.ok().body(Map.of("mensaje", "Grupo asignado correctamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("mensaje", e.getMessage()));
+        }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarEstudiante(@PathVariable Long id) {
+        try {
+            estudianteService.eliminarEstudiante(id);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build(); // 404 si no existe
+        }
+    }
 }
 // End of EstudianteController.java

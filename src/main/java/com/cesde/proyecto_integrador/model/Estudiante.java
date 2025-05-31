@@ -18,7 +18,6 @@ public class Estudiante {
     private String fechaNacimiento;
     private String correo;
     private String telefono;
-    private String grupo;
     private String genero;
     private String direccion;
     private String eps;
@@ -27,4 +26,7 @@ public class Estudiante {
 
     private String documentoIdentidadPath;
     private String permisoMenorPath;
+    @ManyToOne
+    @JoinColumn(name = "grupo_id")
+    private Grupo grupo;
 }

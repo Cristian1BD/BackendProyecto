@@ -13,7 +13,7 @@ public class EstudianteDTO {
     private String fechaNacimiento;
     private String correo;
     private String telefono;
-    private String grupo;
+    private Long grupoId;
     private String genero;
     private String direccion;
     private String eps;

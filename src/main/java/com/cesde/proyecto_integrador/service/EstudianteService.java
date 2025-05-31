@@ -6,4 +6,6 @@ import com.cesde.proyecto_integrador.dto.EstudianteDTO;
 public interface EstudianteService {
     void guardarEstudiante(EstudianteDTO dto);
     List<EstudianteDTO> obtenerTodos();
+    void asignarGrupo(Long estudianteId, Long grupoId);
+    void eliminarEstudiante(Long id);
 }
