@@ -4,11 +4,15 @@ import com.cesde.proyecto_integrador.dto.EstudianteDTO;
 import com.cesde.proyecto_integrador.service.EstudianteService;
 import com.cesde.proyecto_integrador.model.Estudiante;
 import com.cesde.proyecto_integrador.repository.EstudianteRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EstudianteServiceImpl implements EstudianteService {
@@ -64,5 +68,23 @@ public class EstudianteServiceImpl implements EstudianteService {
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
         System.out.println(">>> Archivo guardado en: " + filePath);
         return filePath;
+    }
+
+    @Override
+    public List<EstudianteDTO> obtenerTodos() {
+        List<Estudiante> estudiantes = repository.findAll();
+        return estudiantes.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private EstudianteDTO convertToDTO(Estudiante estudiante) {
+        EstudianteDTO dto = new EstudianteDTO();
+        dto.setId(estudiante.getId());
+        dto.setNombre(estudiante.getNombre());
+        dto.setNumeroDocumento(estudiante.getNumeroDocumento());
+        dto.setGrupo(estudiante.getGrupo());
+        // Puedes mapear otros campos si deseas
+        return dto;
     }
 }

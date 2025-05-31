@@ -4,6 +4,7 @@ import com.cesde.proyecto_integrador.dto.EstudianteDTO;
 import com.cesde.proyecto_integrador.service.EstudianteService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,12 @@ public class EstudianteController {
     @Autowired
     private EstudianteService estudianteService;
 
+    @GetMapping
+    public ResponseEntity<List<EstudianteDTO>> listarEstudiantes() {
+        List<EstudianteDTO> estudiantes = estudianteService.obtenerTodos();
+        return ResponseEntity.ok(estudiantes);
+    }
+
     @PostMapping
     public ResponseEntity<Map<String, String>> registrarEstudiante(@ModelAttribute EstudianteDTO dto) {
         Map<String, String> response = new HashMap<>();
@@ -30,8 +37,11 @@ public class EstudianteController {
             System.out.println("Número Documento: " + dto.getNumeroDocumento());
             System.out.println("Correo: " + dto.getCorreo());
             System.out.println("Teléfono: " + dto.getTelefono());
-            System.out.println("Documento Identidad: " + (dto.getDocumentoIdentidad() != null ? dto.getDocumentoIdentidad().getOriginalFilename() : "null"));
-            System.out.println("Permiso Menor: " + (dto.getPermisoMenor() != null ? dto.getPermisoMenor().getOriginalFilename() : "null"));
+            System.out.println("Documento Identidad: "
+                    + (dto.getDocumentoIdentidad() != null ? dto.getDocumentoIdentidad().getOriginalFilename()
+                            : "null"));
+            System.out.println("Permiso Menor: "
+                    + (dto.getPermisoMenor() != null ? dto.getPermisoMenor().getOriginalFilename() : "null"));
 
             estudianteService.guardarEstudiante(dto);
 
