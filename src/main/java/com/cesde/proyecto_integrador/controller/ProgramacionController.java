@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import com.cesde.proyecto_integrador.dto.ProgramacionDTO;
 import com.cesde.proyecto_integrador.service.ProgramacionService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
 @RestController
 @RequestMapping("/api/programaciones")
 public class ProgramacionController {

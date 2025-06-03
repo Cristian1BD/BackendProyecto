@@ -49,7 +49,7 @@ public class GrupoServiceImpl implements GrupoService {
         grupoRepository.deleteById(id);
     }
 
-    // Utilidades de mapeo
+    // Mapeo Entity <-> DTO
     private GrupoDTO mapToDTO(Grupo grupo) {
         GrupoDTO dto = new GrupoDTO();
         dto.setId(grupo.getId());

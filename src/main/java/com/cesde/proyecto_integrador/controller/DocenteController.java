@@ -41,4 +41,10 @@ public class DocenteController {
         docenteService.eliminarDocente(id);
         return ResponseEntity.noContent().build();
     }
+
+    // DocenteController.java
+    @GetMapping("/docentes")
+    public List<DocenteDTO> listarDocentes() {
+        return docenteService.listarDocentes();
+    }
 }

@@ -1,18 +1,21 @@
 package com.cesde.proyecto_integrador.service.impl;
-import com.cesde.proyecto_integrador.dto.ProgramacionDTO;
-import com.cesde.proyecto_integrador.model.Programacion;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.cesde.proyecto_integrador.dto.ProgramacionDTO;
+import com.cesde.proyecto_integrador.model.Docente;
+import com.cesde.proyecto_integrador.model.Grupo;
+import com.cesde.proyecto_integrador.model.Programacion;
+import com.cesde.proyecto_integrador.repository.DocenteRepository;
+import com.cesde.proyecto_integrador.repository.GrupoRepository;
+import com.cesde.proyecto_integrador.repository.ProgramacionRepository;
+import com.cesde.proyecto_integrador.service.ProgramacionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cesde.proyecto_integrador.repository.ProgramacionRepository;
-import com.cesde.proyecto_integrador.repository.DocenteRepository;
-import com.cesde.proyecto_integrador.repository.GrupoRepository;
-import com.cesde.proyecto_integrador.service.ProgramacionService;
-
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProgramacionServiceImpl implements ProgramacionService {
@@ -30,14 +33,14 @@ public class ProgramacionServiceImpl implements ProgramacionService {
     public ProgramacionDTO crearProgramacion(ProgramacionDTO dto) {
         Programacion programacion = new Programacion();
         mapToEntity(dto, programacion);
-        programacionRepository.save(programacion);
+        programacion = programacionRepository.save(programacion);
         return mapToDTO(programacion);
     }
 
     @Override
     public ProgramacionDTO obtenerProgramacion(Long id) {
         Programacion p = programacionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("No encontrado"));
+            .orElseThrow(() -> new RuntimeException("Programación no encontrada con ID: " + id));
         return mapToDTO(p);
     }
 
@@ -50,49 +53,58 @@ public class ProgramacionServiceImpl implements ProgramacionService {
 
     @Override
     public void eliminarProgramacion(Long id) {
+        if (!programacionRepository.existsById(id)) {
+            throw new RuntimeException("No se puede eliminar: Programación no encontrada");
+        }
         programacionRepository.deleteById(id);
     }
 
     @Override
     public ProgramacionDTO actualizarProgramacion(Long id, ProgramacionDTO dto) {
         Programacion p = programacionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("No encontrado"));
+            .orElseThrow(() -> new RuntimeException("Programación no encontrada con ID: " + id));
         mapToEntity(dto, p);
         return mapToDTO(programacionRepository.save(p));
     }
 
+    // Mapear de Entity a DTO
     private ProgramacionDTO mapToDTO(Programacion p) {
-        ProgramacionDTO dto = new ProgramacionDTO();
-        dto.setId(p.getId());
-        dto.setSalida(p.getSalida());
-        dto.setAsignacion(p.getAsignacion());
-        dto.setOrganizador(p.getOrganizador());
-        dto.setFecha(p.getFecha());
-        dto.setHoraSalida(p.getHoraSalida());
-        dto.setHoraRegreso(p.getHoraRegreso());
-        dto.setDestino(p.getDestino());
-        dto.setCupo(p.getCupo());
-        dto.setGrupoId(p.getGrupo() != null ? p.getGrupo().getId() : null);
-        dto.setDocenteId(p.getDocente() != null ? p.getDocente().getId() : null);
-        return dto;
+        return ProgramacionDTO.builder()
+            .id(p.getId())
+            .salida(p.getSalida())
+            .asignacion(p.getAsignacion())
+            .organizador(p.getOrganizador())
+            .fecha(p.getFecha().toString())  // LocalDate a String
+            .horaSalida(p.getHoraSalida().toString()) // LocalTime a String
+            .horaRegreso(p.getHoraRegreso().toString())
+            .destino(p.getDestino())
+            .cupo(p.getCupo())
+            .grupoId(p.getGrupo() != null ? p.getGrupo().getId() : null)
+            .docenteId(p.getDocente() != null ? p.getDocente().getId() : null)
+            .build();
     }
 
+    // Mapear de DTO a Entity
     private void mapToEntity(ProgramacionDTO dto, Programacion p) {
         p.setSalida(dto.getSalida());
         p.setAsignacion(dto.getAsignacion());
         p.setOrganizador(dto.getOrganizador());
-        p.setFecha(dto.getFecha());
-        p.setHoraSalida(dto.getHoraSalida());
-        p.setHoraRegreso(dto.getHoraRegreso());
+        p.setFecha(LocalDate.parse(dto.getFecha()));
+        p.setHoraSalida(LocalTime.parse(dto.getHoraSalida()));
+        p.setHoraRegreso(LocalTime.parse(dto.getHoraRegreso()));
         p.setDestino(dto.getDestino());
         p.setCupo(dto.getCupo());
+
         if (dto.getGrupoId() != null) {
-            p.setGrupo(grupoRepository.findById(dto.getGrupoId())
-                .orElseThrow(() -> new RuntimeException("Grupo no encontrado")));
+            Grupo grupo = grupoRepository.findById(dto.getGrupoId())
+                .orElseThrow(() -> new RuntimeException("Grupo no encontrado con ID: " + dto.getGrupoId()));
+            p.setGrupo(grupo);
         }
+
         if (dto.getDocenteId() != null) {
-            p.setDocente(docenteRepository.findById(dto.getDocenteId())
-                .orElseThrow(() -> new RuntimeException("Docente no encontrado")));
+            Docente docente = docenteRepository.findById(dto.getDocenteId())
+                .orElseThrow(() -> new RuntimeException("Docente no encontrado con ID: " + dto.getDocenteId()));
+            p.setDocente(docente);
         }
     }
 }
