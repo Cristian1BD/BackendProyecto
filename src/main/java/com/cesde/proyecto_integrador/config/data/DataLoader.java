@@ -19,11 +19,11 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (userRepository.findByEmail("admin@admin.com") == null) {
+        if (userRepository.findByEmail("Cristian@estudiante.com") == null) {
             User adminUser = new User();           
-            adminUser.setEmail("admin@admin.com");
-            adminUser.setPassword(passwordEncoder.encode("admin"));
-            adminUser.setRole(User.Role.ADMIN);
+            adminUser.setEmail("Cristian@estudiante.com");
+            adminUser.setPassword(passwordEncoder.encode("estudiante"));
+            adminUser.setRole(User.Role.STUDENT);
             userRepository.save(adminUser);
         }       
     }
