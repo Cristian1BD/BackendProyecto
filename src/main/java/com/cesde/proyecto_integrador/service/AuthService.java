@@ -1,7 +1,8 @@
 package com.cesde.proyecto_integrador.service;
 
-import com.cesde.proyecto_integrador.model.User;
+import com.cesde.proyecto_integrador.dto.UserLoginDTO;
+import com.cesde.proyecto_integrador.dto.UserLoginResponseDTO;
 
-public interface AuthService {   
-    User login(User user);   
+public interface AuthService {
+    UserLoginResponseDTO login(UserLoginDTO loginDTO);
 }
